@@ -1,0 +1,519 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/manropeFont/Manrope-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/manropeFont/Manrope-Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/manropeFont/Manrope-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/manropeFont/Manrope-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/manropeFont/Manrope-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/manropeFont/Manrope-Black.ttf") format("truetype");
+  font-weight: 900;
+}
+
+:root {
+  --primary--: #8c2bee;
+  --background-light--: #f7f6f8;
+  --background-dark--: #0e0c12;
+  --surface-dark--: #16131a;
+  --nice--grey--: #686868;
+}
+html,
+body {
+  /* height: 100%;
+  overflow-y: auto; */
+  min-height: 100vh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.login-page-container {
+  display: flex;
+  flex: 1;
+  min-height: 100%;
+  color: var(--background-light--);
+}
+.image-and-titles-container {
+  flex: 2;
+  /* height: 100%; */
+  position: relative;
+  overflow: hidden;
+  /* display: flex;
+  align-items: center;
+  justify-content: flex-end; */
+}
+.itry {
+  position: absolute;
+  /* bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0; */
+  inset: 0;
+  min-height: 100vh;
+}
+.image-and-titles-container img {
+  /* object-fit: cover;
+  width: 100%; */
+  /* height: 100%; */
+  /* max-height: 100vh;
+  overflow: hidden; */
+}
+.itry img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+}
+.image-and-titles-container .overlay {
+  position: absolute;
+  /* bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0; */
+  inset: 0;
+  min-height: 100vh;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0));
+}
+.image-and-titles-container .text {
+  /* position: absolute; */
+  z-index: 3;
+  color: var(--background-light--);
+  /* bottom: 50px;
+  left: 20px; */
+  max-width: 70%;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  min-height: 100vh;
+}
+.text-wrapper {
+  position: relative;
+  height: 180px;
+}
+.text h1 {
+  font-size: 3.5rem;
+  font-weight: 800;
+  line-height: 3.5rem;
+  letter-spacing: -2px;
+  position: absolute;
+  /* inset: 0; */
+  bottom: 0;
+  left: 0;
+}
+.h1-span {
+  color: var(--primary--);
+}
+.text p {
+  font-family: "Manrope";
+  margin-top: 20px;
+  font-size: 0.95rem;
+  line-height: 1.6rem;
+  font-weight: 600;
+  letter-spacing: 0.6px;
+}
+.login-form-container,
+.parent-form-container {
+  flex: 1;
+  /* height: 100%; */
+}
+.login-form-container {
+  background-color: var(--background-dark--);
+  display: flex;
+  flex-direction: column;
+}
+.parent-form-container {
+  display: flex;
+  justify-content: center;
+
+  flex-direction: column;
+  font-family: "Manrope";
+  gap: 20px;
+  padding: 0 30px;
+}
+h1 {
+  font-family: "Manrope";
+  font-weight: 800;
+  font-size: 3rem;
+}
+
+/* ----------------------- this for logo part ------------ */
+.login-form-container {
+  padding: 30px 40px;
+}
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.university-cap {
+  height: 30px;
+  width: 30px;
+  background-color: var(--primary--);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--background-light--);
+  font-size: 0.9rem;
+  box-shadow: 0 0 15px rgba(140, 43, 238, 0.4);
+
+  transition: all 0.3s ease-in-out;
+}
+.logo-title {
+  font-family: "Manrope";
+  color: var(--background-light--);
+  font-weight: 700;
+  font-size: 1rem;
+}
+.help-center {
+  font-family: "Manrope";
+  font-size: 0.8rem;
+  letter-spacing: 1px;
+  color: var(--nice--grey--);
+  font-weight: 700;
+}
+/* ---------- this part is for the form login ---------  */
+.form-container {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.form-container p {
+  color: var(--nice--grey--);
+  font-size: 0.85rem;
+}
+.form-container h2 {
+  font-weight: 200;
+  font-size: 2rem;
+}
+.dot-span {
+  color: var(--primary--);
+}
+.label-text {
+  font-size: 0.85rem;
+  letter-spacing: 0.4px;
+  color: var(--primary--);
+  font-weight: 600;
+}
+.form-input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.placeholder-Container {
+  padding: 17px 15px;
+  background-color: var(--surface-dark--);
+  border: 1px solid #272727;
+  border-radius: 15px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.form-input input {
+  outline: none;
+  border: none;
+  background-color: var(--surface-dark--);
+  font-size: 1rem;
+  color: var(--background-light--);
+  width: 100%;
+}
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+}
+.placeholder-Container:focus {
+  border: solid 1px var(--nice--grey--);
+}
+.form-input input::placeholder {
+  color: #343434;
+}
+.remember-me-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+  color: var(--nice--grey--);
+}
+.radio-remember-div {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+input[type="radio"] {
+  accent-color: var(--primary--);
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--nice--grey--);
+  border-radius: 50%;
+  outline: none;
+  background-color: var(--surface-dark--);
+  cursor: pointer;
+}
+input[type="radio"]:checked {
+  background-color: var(--primary--);
+
+  padding: 4px;
+  background-clip: content-box;
+}
+.button-login-container {
+  width: 100%;
+}
+.login-btn {
+  width: 100%;
+  padding: 18px 20px;
+  border-radius: 15px;
+  border: none;
+  background-color: var(--primary--);
+  color: var(--background-light--);
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  box-shadow: 0 0 15px rgba(140, 43, 238, 0.4);
+
+  transition: all 0.3s ease-in-out;
+  margin-top: 10px;
+}
+.login-btn i {
+  font-size: 0.95rem;
+}
+
+.login-btn:hover {
+  box-shadow: 0 0 25px rgba(140, 43, 238, 0.7);
+  transform: translateY(-2px); /* Lifts the button slightly */
+}
+
+/* 4. Optional: A constant pulsing "breathing" effect */
+@keyframes pulse-glow {
+  0% {
+    box-shadow: 0 0 10px rgba(140, 43, 238, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(140, 43, 238, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(140, 43, 238, 0.4);
+  }
+}
+
+.login-btn {
+  animation: pulse-glow 2s infinite;
+}
+hr {
+  background-color: var(--surface-dark--);
+  height: 2px;
+  border: none;
+}
+
+.footer-login {
+  display: flex;
+  justify-content: space-between;
+}
+.footer-login span {
+  font-size: 0.75rem;
+  color: var(--nice--grey--);
+}
+.privacy-conatiner {
+  display: flex;
+  gap: 10px;
+}
+.em {
+  padding: 20px;
+}
+
+.userInputs-container {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+@media (max-height: 800px) {
+  .parent-form-container {
+    gap: 8px;
+  }
+  .form-container h2 {
+    font-weight: 200;
+    font-size: 1.7rem;
+  }
+
+  .form-container p {
+    font-size: 0.85rem;
+  }
+  .placeholder-Container {
+    padding: 16px 15px;
+  }
+  .login-btn {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 1rem;
+    margin-top: 0px;
+  }
+  .label-text {
+    font-size: 0.81rem;
+    letter-spacing: 0.4px;
+    color: var(--primary--);
+    font-weight: 600;
+  }
+}
+
+/* media query for mobile phone screens */
+
+@media (max-width: 600px), (max-height: 500px) {
+  .image-and-titles-container {
+    display: none;
+  }
+  .form-container h2 {
+    font-size: 1.7rem;
+  }
+  .form-container p {
+    font-size: 0.74rem;
+    font-weight: 500;
+  }
+  .login-btn {
+    width: 100%;
+    padding: 14px 16px;
+    font-size: 0.89rem;
+    margin-top: 0;
+  }
+  .label-text {
+    font-size: 0.7rem;
+    letter-spacing: 0.4px;
+    color: var(--primary--);
+    font-weight: 600;
+  }
+  .parent-form-container {
+    gap: 20px;
+    padding: 0;
+  }
+  .remember-me-container {
+    font-size: 0.74rem;
+  }
+
+  .logo-title {
+    font-size: 0.85rem;
+  }
+
+  .footer-login span {
+    font-size: 0.71rem;
+  }
+  .help-center {
+    font-size: 0.68rem;
+  }
+  .form-input input::placeholder {
+    color: #343434;
+    font-size: 0.83rem;
+  }
+  input[type="radio"] {
+    width: 15px;
+    height: 15px;
+  }
+}
+
+/* 
+// for tablete  */
+
+@media (min-width: 601px) and (max-width: 1024px) {
+  .image-and-titles-container {
+    display: none;
+  }
+
+  .form-container h2 {
+    font-size: 2rem; /* bigger than phone */
+  }
+
+  .form-container p {
+    font-size: 0.9rem;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+
+  .login-btn {
+    width: 100%;
+    padding: 16px 18px;
+    font-size: 1rem;
+    margin-top: 0;
+  }
+
+  .label-text {
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    color: var(--primary--);
+    font-weight: 600;
+  }
+
+  .parent-form-container {
+    gap: 24px;
+    padding: 40px 10px; /* add a little breathing room */
+  }
+
+  .remember-me-container {
+    font-size: 0.85rem;
+  }
+
+  .logo-title {
+    font-size: 1rem;
+  }
+
+  .footer-login span {
+    font-size: 0.85rem;
+  }
+
+  .help-center {
+    font-size: 0.8rem;
+  }
+
+  .form-input input::placeholder {
+    color: #343434;
+    font-size: 0.9rem;
+  }
+
+  input[type="radio"] {
+    width: 18px;
+    height: 18px;
+  }
+}

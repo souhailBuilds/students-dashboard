@@ -1,0 +1,107 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/manropeFont/Manrope-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/manropeFont/Manrope-Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/manropeFont/Manrope-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/manropeFont/Manrope-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/manropeFont/Manrope-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/manropeFont/Manrope-Black.ttf") format("truetype");
+  font-weight: 900;
+}
+
+:root {
+  --primary--: #8c2bee;
+  --background-light--: #f7f6f8;
+  --background-dark--: #0e0c12;
+  --surface-dark--: #16131a;
+  --nice--grey--: #9a9a9a;
+}
+html,
+body {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--background-dark--);
+  font-family: "Manrope";
+  color: var(--background-light--);
+  min-height: 100vh;
+  justify-content: center;
+  align-items: center;
+}
+
+.main-container {
+  width: 80%;
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+h1 {
+  font-weight: 800;
+  font-size: 2.6rem;
+}
+p {
+  font-weight: 500;
+  font-size: 0.96rem;
+  color: var(--nice--grey--);
+}
+
+.maternelle-container,
+.cours-de-soutien-container {
+  display: flex;
+  background-color: var(--surface-dark--);
+}
+.title-and-texts {
+  padding: 30px;
+  flex: 1;
+  border-radius: 15px;
+}
+.img-container {
+  flex: 1;
+}
+img {
+  width: 100%;
+}
+.choice-btn {
+  width: 150px;
+  height: 45px;
+  background-color: var(--primary--);
+  border: none;
+  color: var(--background-light--);
+  font-family: "Manrope";
+  font-weight: 800;
+  font-size: 0.9rem;
+  margin-top: 20px;
+  cursor: pointer;
+}

@@ -1,0 +1,395 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="css/dashboard.css" />
+    <link rel="stylesheet" href="/css/fontAwsome-css/all.min.css" />
+
+    <title>Al-Amal Dashboard</title>
+  </head>
+  <body>
+    <div class="page-container">
+      <header>
+        <div class="header-container">
+          <div class="logo-container">
+            <a href="/dashboard" class="logo">
+              <div class="university-cap">
+                <i class="fa-solid fa-graduation-cap"></i>
+              </div>
+              <span class="logo-title">AlAmal Portal</span>
+            </a>
+          </div>
+          <div class="add-teacher-container-header">
+            <button class="show-teacher-list-btn">
+              <i class="fa-solid fa-user"></i> Teachers List
+            </button>
+            <button class="add-teacher-btn">
+              <i class="fa-solid fa-plus"></i> Add Teacher
+            </button>
+          </div>
+        </div>
+      </header>
+      <main>
+        <!-- this section for display alert messsage  -->
+        <section class="alert-message">
+          <div class="alert-container">
+            <div class="alert-sign-container">
+              <div class="circle-sign"></div>
+              <div class="alert-sign">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+              </div>
+            </div>
+            <div class="alert-message-container">
+              <h3>Alerte de paiement</h3>
+              <p>3 étudiants doivent payer dans les 3 jours</p>
+            </div>
+          </div>
+        </section>
+        <!-- this section for display search bar and filters and add student or download excel file -->
+        <section class="search-filter-addStudent">
+          <div class="search-filter-add-container">
+            <form class="search-container">
+              <button class="search-btn" type="submit">
+                <i class="fa-solid fa-magnifying-glass"></i>
+              </button>
+              <input
+                type="text"
+                placeholder="Search by name phone ...."
+                class="search-filter"
+                required
+              />
+            </form>
+
+            <div class="filter-container">
+              <select
+                name="professors-selector"
+                id=""
+                required
+                class="filter-selector prof-selector"
+              >
+                <option value="" disabled selected>choose an option</option>
+                <option value="all students">All Stundents</option>
+              </select>
+              <select
+                name="status-selector"
+                id=""
+                required
+                class="filter-selector status-selector"
+              >
+                <option value="" disabled selected>choose an option</option>
+                <option value="all students">All Sudents</option>
+                <option value="paid">Paid</option>
+                <option value="not paid">Not paid</option>
+                <option value="due soon">Due soon</option>
+                <option value="late">Late</option>
+              </select>
+            </div>
+
+            <div class="download-exel-and-add-student-button">
+              <button class="download-btn">
+                <i class="fa-solid fa-download"></i> Excel
+              </button>
+              <button class="add-student-btn">
+                <i class="fa-solid fa-user-plus"></i> Add Student
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <!-- this section is for display how much money we make and other data -->
+        <section class="professeur-data-and-how-much-money">
+          <div class="professeur-and-money-container">
+            <div class="revenu-month">
+              <div class="revenu-title">
+                <span>Revenue this Month</span>
+                <i class="fa-solid fa-coins"></i>
+              </div>
+
+              <div class="revenue-value-container">
+                <div class="revenu-con">
+                  <i class="fa-solid fa-hand-holding-dollar"></i>
+                  <span class="month-revenu"></span>
+                </div>
+              </div>
+
+              <div class="number-of-all-students">
+                <span class="total-students"></span>
+              </div>
+            </div>
+            <!-- student per professeur -->
+            <div class="student-per-professeur">
+              <div class="professuer-div-title">
+                <span>Students per Professeur</span>
+                <i class="fa-solid fa-chart-column"></i>
+              </div>
+              <div class="bar-charts-profs-container">
+                <canvas id="prof-chart"></canvas>
+              </div>
+            </div>
+
+            <!-- pyamnet status -->
+            <div class="payment-status-div">
+              <div class="payment-status-div-title">
+                <span>Payment Status</span>
+                <i class="fa-solid fa-chart-pie"></i>
+              </div>
+              <div class="circle-chart-status-container">
+                <canvas id="status-circle-chart"></canvas>
+              </div>
+            </div>
+
+            <!-- revenu trends -->
+            <div class="revenu-trends">
+              <div class="revenu-trends-title">
+                <span>Revenue Trends</span>
+                <i class="fa-solid fa-arrow-trend-up"></i>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- this section for display all students from database -->
+        <section class="students-from-database">
+          <div class="database-students-container"></div>
+        </section>
+      </main>
+    </div>
+
+    <!------ this part is for the add student form  ----->
+    <div class="overlay hidden">
+      <div class="holder">
+        <canvas id="canvas" width="300" height="300" class="hidden"></canvas>
+        <div class="form-container" role="dialog">
+          <div class="texts-container">
+            <h2 class="form-title">Add new Student</h2>
+            <p>Enter student details and assign a professor</p>
+          </div>
+          <form action="" class="student-form">
+            <div class="form-inputs-container">
+              <div class="photo-container">
+                <span>Profile Photo</span>
+                <!-- <input type="image" class="image-input" /> -->
+                <input type="text" class="image-input" />
+              </div>
+              <div class="infos-container">
+                <div class="name-info">
+                  <div class="first-name">
+                    <span>First Name</span>
+                    <input
+                      type="text"
+                      placeholder="Enter first name"
+                      class="first-name-input"
+                    />
+                  </div>
+                  <div class="last-name">
+                    <span>last Name</span>
+                    <input
+                      type="text"
+                      placeholder="Enter last name"
+                      class="last-name-input"
+                    />
+                  </div>
+                </div>
+                <div class="gender-phone">
+                  <div class="gender">
+                    <span>Gender</span>
+                    <select class="gender-input" required>
+                      <option value="" disabled selected>
+                        choose an option
+                      </option>
+                      <option value="garcon">garcon</option>
+                      <option value="fille">fille</option>
+                    </select>
+                  </div>
+                  <div class="phone-number">
+                    <span>Phone number</span>
+                    <input
+                      type="text"
+                      placeholder=" Ex:0666666666"
+                      class="phone-number-input"
+                    />
+                  </div>
+                </div>
+                <div class="adress">
+                  <span>Address</span>
+                  <input
+                    type="text"
+                    placeholder=" enter you homme adress"
+                    class="address-input"
+                  />
+                </div>
+                <div class="professor-price">
+                  <div class="professor">
+                    <span>Professeur</span>
+                    <select
+                      name="professor-select"
+                      class="professeur-input"
+                      required
+                    >
+                      <option value="" disabled selected>
+                        choose an option
+                      </option>
+                    </select>
+                  </div>
+                  <div class="price">
+                    <span>Tution Price</span>
+                    <input
+                      type="number"
+                      placeholder=" Ex:150 Dh"
+                      class="price-input"
+                    />
+                  </div>
+                </div>
+                <div class="payment-status">
+                  <span>Payment Status</span>
+                  <!-- <input type="checkbox" class="hasPaid" /> -->
+                  <select class="hasPaid-input" required>
+                    <option value="" selected disabled>choose an option</option>
+                    <option value="oui">oui</option>
+                    <option value="no">no</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+            <div class="form-buttons">
+              <button class="cancel-btn" type="button">cancel</button>
+              <button class="save-btn" type="submit">Save Student</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- thsi section is for display form of add  new teacher -->
+    <div class="overlay-teacher hidden">
+      <div class="add-teacher-container">
+        <div class="titles-container">
+          <span class="add-new-teacher-title">Add New Teacher</span>
+          <span class="mini-teacher-title"
+            >Enter the details below to register a new teacher</span
+          >
+        </div>
+        <form action="" class="teacher-form">
+          <div class="name-teacher-input-container">
+            <!-- ************************** -->
+            <div class="first-name-teacher-container">
+              <span>First Name</span>
+              <div class="name-icon-container">
+                <i class="fa-solid fa-user"></i>
+                <input
+                  type="text"
+                  class="teacher-firstname-input teacher-input"
+                  required
+                />
+              </div>
+            </div>
+            <!-- ************************** -->
+            <div class="last-name-teacher-container">
+              <span>Last Name</span>
+              <div class="name-icon-container">
+                <i class="fa-solid fa-user"></i>
+                <input
+                  type="text"
+                  class="teacher-lastname-input teacher-input"
+                  required
+                />
+              </div>
+            </div>
+          </div>
+          <!-- ************************** -->
+          <div class="phone-teacher-number-container">
+            <span>Phone Number</span>
+            <div class="phoneNumber-icon-container">
+              <i class="fa-solid fa-phone"></i>
+              <input
+                type="text"
+                class="teacher-phone-num-input teacher-input"
+              />
+            </div>
+          </div>
+          <!-- ************************************** -->
+          <div class="subject-teacher-container">
+            <span>Assigned Subject</span>
+            <select required class="subject-teacher-choice teacher-input">
+              <option value="" selected disabled>Select Subject</option>
+              <option value="math">Mathematics</option>
+              <option value="english">English</option>
+              <option value="science">Science</option>
+              <option value="history">History</option>
+              <option value="physics">Physics</option>
+              <option value="chemistry">Chemistry</option>
+              <option value="biology">Biology</option>
+              <option value="all">All Subjects</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+          <hr />
+          <!-- ********************************** -->
+          <div class="button-teacher-form-container">
+            <button class="teacher-cancel-btn" type="button">cancel</button>
+            <button class="teacher-add-btn" type="submit">
+              <i class="fa-solid fa-plus"></i> Add Teacher
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- our hidden and reusable tudent tmmplet  -->
+    <template id="student-templete">
+      <div class="student-card">
+        <div class="image-container">
+          <div class="image-name-container">
+            <img src="" alt="student-image" class="student-image" />
+            <div class="name-info-temp">
+              <span class="student-name student-name-value"></span>
+              <span class="num-tele num-tele-value"></span>
+            </div>
+          </div>
+          <div class="payment-statu-tag-container">
+            <div class="payment-statu">ACTIVE</div>
+          </div>
+        </div>
+        <div class="prof-container infos">
+          <span class="keys">Professor</span>
+          <span class="value professeur-value"></span>
+        </div>
+        <div class="price-container infos">
+          <span class="keys">Price</span>
+          <span class="value price-value"></span>
+        </div>
+        <div class="next-payment-container infos">
+          <span class="keys">Next Payment</span>
+          <span class="value nextPayment-value"></span>
+        </div>
+        <div class="payment-deadline">
+          <div class="payment-infos infos">
+            <span class="keys">Payment Deadline</span>
+            <span class="value days-left"></span>
+          </div>
+          <div class="progress-bar"></div>
+        </div>
+        <hr class="line" />
+        <div class="adress-conatiner">
+          <i class="fa-solid fa-location-dot"></i>
+          <span class="adress-value"></span>
+        </div>
+        <div class="call-to-action-container">
+          <button class="mark-paid">MARK PAID</button>
+          <button class="whatssap-btn">
+            <i class="fa-brands fa-whatsapp"></i>
+          </button>
+          <button class="edit-btn">
+            <i class="fa-solid fa-user-pen"></i>
+          </button>
+          <button class="delete-btn">
+            <i class="fa-solid fa-user-xmark"></i>
+          </button>
+        </div>
+      </div>
+    </template>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/dashboard.js" type="module"></script>
+  </body>
+</html>

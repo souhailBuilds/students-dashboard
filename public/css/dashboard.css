@@ -1,0 +1,679 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/manropeFont/Manrope-Regular.ttf") format("truetype");
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/manropeFont/Manrope-Medium.ttf") format("truetype");
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/manropeFont/Manrope-SemiBold.ttf") format("truetype");
+  font-weight: 600;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/manropeFont/Manrope-Bold.ttf") format("truetype");
+  font-weight: 700;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/manropeFont/Manrope-ExtraBold.ttf") format("truetype");
+  font-weight: 800;
+}
+
+@font-face {
+  font-family: "Manrope";
+  src: url("../fonts/manropeFont/Manrope-Black.ttf") format("truetype");
+  font-weight: 900;
+}
+
+:root {
+  --primary--: #8c2bee;
+  --background-light--: #f7f6f8;
+  --background-dark--: #0e0c12;
+  --surface-dark--: #16131a;
+  --nice--grey--: #686868;
+  --very-light--: #1c1c1c;
+  --very-dark-green: #003d2a;
+  --progress-green-color: #00ff88;
+}
+html,
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--background-dark--);
+  color: var(--background-light--);
+  font-family: "Manrope";
+}
+.page-container {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  padding: 20px 40px;
+}
+
+main {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+/* ---------------- the header section style --------------- */
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 50px;
+}
+
+.add-teacher-container-header {
+  display: flex;
+  gap: 5px;
+  border-bottom: 1px solid var(--very-light--);
+  height: 100%;
+  align-items: center;
+}
+
+.add-teacher-container-header button {
+  width: 120px;
+  height: 30px;
+  padding: 4px 7px;
+}
+
+.show-teacher-list-btn {
+  color: var(--background-light--);
+  background-color: transparent;
+  border: none;
+}
+
+.add-teacher-btn {
+  background-color: #8c2bee20;
+  color: #bf7bff;
+  border-radius: 20px;
+  border: none;
+}
+.logo-container {
+  width: 100%;
+  border-bottom: 1px solid var(--very-light--);
+  height: 100%;
+  display: flex;
+}
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.university-cap {
+  height: 30px;
+  width: 30px;
+  background-color: var(--primary--);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--background-light--);
+  font-size: 0.9rem;
+  box-shadow: 0 0 15px rgba(140, 43, 238, 0.4);
+
+  transition: all 0.3s ease-in-out;
+}
+.logo-title {
+  font-family: "Manrope";
+  color: var(--background-light--);
+  font-weight: 700;
+  font-size: 1rem;
+}
+/* -------- this part is to hadle alert message --------- */
+.alert-container {
+  height: 70px;
+  background-color: rgba(255, 221, 0, 0.164);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  border-radius: 8px;
+  border: 1px solid #ffdd006d;
+  gap: 15px;
+}
+.circle-sign {
+  height: 40px;
+  width: 40px;
+  background-color: #ffdd006d;
+  border-radius: 50%;
+}
+.alert-sign-container {
+  position: relative;
+  height: 40px;
+  width: 40px;
+}
+.circle-sign {
+  inset: 0;
+  position: absolute;
+}
+.fa-triangle-exclamation {
+  font-size: 1.4rem;
+}
+.alert-sign {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.alert-message-container p {
+  font-size: 0.9rem;
+  color: #ffdd00b4;
+  font-weight: 600;
+}
+
+/* this part is for section search and download excel and add students */
+.search-filter-add-container {
+  display: flex;
+  justify-content: space-between;
+}
+.download-btn,
+.add-student-btn {
+  padding: 7px 12px;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  font-family: "Manrope";
+  font-weight: 600;
+  border-radius: 8px;
+}
+.add-student-btn {
+  background-color: var(--primary--);
+  color: var(--background-light--);
+  border: none;
+}
+.download-btn {
+  background-color: var(--surface-dark--);
+  color: var(--background-light--);
+  border: 1px solid var(--very-light--);
+}
+.download-exel-and-add-student-button {
+  display: flex;
+  gap: 5px;
+}
+
+.filter-selector,
+.search-btn,
+.search-filter {
+  padding: 7px 12px;
+  border: 1px solid var(--very-light--);
+  border-radius: 8px;
+  background-color: var(--surface-dark--);
+  color: var(--background-light--);
+  font-weight: 500;
+}
+
+.search-filter,
+.search-btn {
+  border-radius: 0;
+}
+.search-filter {
+  outline: none;
+}
+.search-filter {
+  width: 300px;
+}
+
+.search-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* this section is for howm uch money we make and professeur data */
+.professeur-and-money-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+.revenu-month,
+.student-per-professeur,
+.payment-status-div,
+.revenu-trends {
+  padding: 20px 15px;
+  border-radius: 8px;
+  background-color: var(--surface-dark--);
+  border: 1px solid var(--very-light--);
+  height: 250px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.revenu-title,
+.professuer-div-title,
+.payment-status-div-title,
+.revenu-trends-title {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 700;
+  font-size: 0.94rem;
+  align-items: center;
+}
+
+.month-revenu {
+  letter-spacing: -1.5px;
+}
+
+.fa-hand-holding-dollar {
+  color: var(--progress-green-color);
+}
+
+.revenu-con {
+  display: flex;
+  gap: 5px;
+  font-weight: 800;
+  font-size: 1.5rem;
+  align-items: center;
+}
+
+.bar-charts-profs-container,
+.circle-chart-status-container {
+  width: 100%;
+  height: 100%;
+  font-size: 0.7rem;
+}
+
+.circle-chart-status-container {
+  position: relative;
+  flex-grow: 1; /* Fills the rest of the card height */
+  width: 100%;
+  min-height: 0; /* Fixes a known flexbox overflow bug */
+}
+
+#status-circle-chart {
+  display: block;
+  max-width: 100% !important;
+  max-height: 100% !important;
+}
+
+.number-of-all-students {
+  margin-top: auto;
+}
+.total-students {
+  font-weight: 700;
+  font-size: 0.97rem;
+}
+
+/* this section for display all students form database in container */
+
+.database-students-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+/* --------- this section for add new student from -----------  */
+
+.overlay,
+.overlay-teacher {
+  position: fixed;
+  top: 0;
+  left: 0;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(10px);
+}
+
+.holder {
+  position: relative;
+  height: auto;
+  width: 600px;
+}
+
+#canvas {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.infos-container {
+  display: flex;
+  gap: 15px;
+  flex-direction: column;
+}
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: var(--surface-dark--);
+  padding: 15px 20px;
+  border-radius: 10px;
+  position: relative;
+  z-index: 1;
+}
+.form-inputs-container {
+  display: flex;
+  gap: 20px;
+}
+.photo-container {
+  display: flex;
+  flex-direction: column;
+}
+.image-input {
+  height: 100%;
+  width: 100%;
+
+  border-radius: 10px;
+  border: 2px var(--primary--) dashed;
+}
+.texts-container {
+  border-bottom: 1px solid var(--nice--grey--);
+  padding-bottom: 10px;
+}
+
+.name-info,
+.gender-phone {
+  display: flex;
+  gap: 10px;
+}
+
+.first-name,
+.last-name,
+.gender,
+.phone-number {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.first-name-input,
+.last-name-input,
+.gender-input,
+.phone-number-input {
+  border: 1px solid var(--nice--grey--);
+  background-color: var(--surface-dark--);
+  padding: 7px;
+  border-radius: 7px;
+  color: var(--nice--grey--);
+}
+/* ---------------- this is part is about our student template -----------  */
+
+.student-card {
+  background-color: var(--surface-dark--);
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  font-size: 0.9rem;
+  border-radius: 10px;
+  border: 2px solid var(--very-light--);
+}
+.image-container,
+.image-name-container {
+  display: flex;
+  justify-content: space-between;
+}
+.image-name-container {
+  align-items: center;
+  gap: 10px;
+}
+
+.name-info-temp {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+img {
+  width: 50px;
+
+  border-radius: 50%;
+  border: 2px solid var(--primary--);
+}
+.student-name {
+  font-weight: 800;
+  font-size: 0.97rem;
+}
+.num-tele,
+.keys {
+  color: var(--nice--grey--);
+  font-size: 0.87rem;
+  letter-spacing: 0.5px;
+}
+.progress-bar {
+  width: 100%;
+  background-color: var(--very-dark-green);
+  height: 8px;
+  border: none;
+  border-radius: 15px;
+  position: relative;
+}
+
+.progress-bar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  background-color: var(--progress-green-color);
+  bottom: 0;
+  border-radius: 15px;
+  width: calc(var(--width, 100) * 1%);
+  min-width: 0;
+  max-width: 100%;
+}
+.infos {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.payment-deadline {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.line {
+  background-color: var(--very-light--);
+  height: 2px;
+  border: none;
+}
+
+.adress-conatiner {
+  display: flex;
+  gap: 5px;
+  padding: 10px 0px;
+  font-size: 0.8rem;
+  align-items: center;
+}
+
+.adress-value {
+  font-size: 0.9rem;
+}
+
+.call-to-action-container {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-top: auto;
+}
+
+.edit-btn,
+.delete-btn,
+.whatssap-btn {
+  color: #bf7bff;
+  border: 2px solid #8c2bee20;
+  height: 20px;
+  background-color: var(--surface-dark--);
+  border-radius: 6px;
+  padding: 5px;
+  height: auto;
+  font-size: 1rem;
+}
+
+.mark-paid {
+  background-color: var(--primary--);
+  color: var(--background-light--);
+  border: none;
+  border-radius: 6px;
+
+  height: auto;
+  padding: 5px 10px;
+  font-weight: 700;
+  height: 35px;
+  flex: 2;
+  font-size: 0.8rem;
+}
+
+/* ************ this part is for add teacher form*********  */
+.add-teacher-container {
+  background-color: var(--surface-dark--);
+  border-radius: 10px;
+  border: 2px solid var(--very-light--);
+  display: flex;
+  flex-direction: column;
+  min-width: 450px;
+  gap: 20px;
+  padding: 30px;
+}
+.teacher-form span {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+/* .add-teacher-container hr {
+  color: var(--very-light--);
+} */
+
+.teacher-form input {
+  color: var(--background-light--);
+}
+.titles-container {
+  display: flex;
+  flex-direction: column;
+}
+.add-new-teacher-title {
+  font-weight: 800;
+  font-size: 1.7rem;
+  letter-spacing: -1.4px;
+}
+.mini-teacher-title {
+  color: var(--nice--grey--);
+  font-size: 0.85rem;
+}
+.teacher-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.name-teacher-input-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+}
+.name-icon-container,
+.phoneNumber-icon-container,
+.subject-teacher-choice {
+  display: flex;
+  align-items: center;
+  background-color: #1c1920;
+  border: 2px solid #2d2a33;
+  outline: none;
+  padding: 10px 8px;
+  border-radius: 8px;
+  gap: 15px;
+  color: var(--background-light--);
+}
+
+.teacher-input {
+  background-color: #1a1721;
+  border: none;
+  outline: none;
+}
+
+.first-name-teacher-container,
+.last-name-teacher-container,
+.phone-teacher-number-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.subject-teacher-container {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.subject-teacher-choice {
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: -0.2px;
+  background-color: #1c1920;
+  border: 2px solid #2d2a33;
+}
+
+.button-teacher-form-container {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.button-teacher-form-container button {
+  padding: 7px 16px;
+  color: var(--background-light--);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  gap: 5px;
+}
+
+.teacher-add-btn {
+  background-color: var(--primary--);
+  border: none;
+}
+
+.teacher-cancel-btn {
+  background-color: #1c1920;
+  border: 2px solid #2d2a33;
+}
+
+.statu-active,
+.statu-not-active {
+  border-radius: 15px;
+  padding: 4px 8px;
+  height: 27px;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+}
+
+.statu-not-active {
+  background-color: #4a3318;
+  color: #ffaa44;
+}
+
+.statu-active {
+  background-color: var(--very-dark-green);
+  color: var(--progress-green-color);
+}
+
+.hidden {
+  display: none;
+}
