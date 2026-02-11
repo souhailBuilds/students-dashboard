@@ -17,9 +17,9 @@ app.use(cors({ origin: process.env.ORIGIN }));
 app.use("/students", studentRoute);
 app.use("/teachers", teacherRoute);
 
-app.get("/login", (req, res) => {
-  res.status(200).sendFile(path.join(__dirname, "views", "login.html"));
-});
+// app.get("/login", (req, res) => {
+//   res.status(200).sendFile(path.join(__dirname, "index.html"));
+// });
 
 app.post("/login", (req, res) => {
   const { username, password } = req.body;
@@ -28,24 +28,24 @@ app.post("/login", (req, res) => {
     password === process.env.LOGIN_PASSWORD
   ) {
     // if pass and username are correct go to next page
-    res.redirect("/choice");
+    //res.redirect("/choice");
+    res.json({ success: true });
   } else {
     // else resend the page login to user again
-    res.status(200).sendFile(path.join(__dirname, "views", "login.html"));
+    //res.status(200).sendFile(path.join(__dirname, "views", "login.html"));
+    res.json({ success: false });
   }
 });
 
 app.get("/choice", (req, res) => {
-  res.status(200).sendFile(path.join(__dirname, "views", "choicePage.html"));
+  res.status(200).sendFile(path.join(__dirname, "choicePage.html"));
 });
 
 app.get("/dashboard", (req, res) => {
-  res.status(200).sendFile(path.join(__dirname, "views", "dashboard.html"));
+  res.status(200).sendFile(path.join(__dirname, "dashboard.html"));
 });
 
 app.get("/template", (req, res) => {
-  res
-    .status(200)
-    .sendFile(path.join(__dirname, "views", "studentTamplate.html"));
+  res.status(200).sendFile(path.join(__dirname, "studentTamplate.html"));
 });
 module.exports = app;

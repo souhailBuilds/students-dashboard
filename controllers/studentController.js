@@ -1,6 +1,20 @@
 const { Student } = require("./../models/model");
-function addStudent(req, res) {
-  new Student(req.body).save();
+async function addStudent(req, res) {
+  // we save a new student in case post methode is trigger
+  // so best way is to avoid .save() and use await with create()
+  //new Student(req.body).save();
+  try {
+    const newStudent = await Student.create(req.body);
+    res.status(201).json({
+      status: "success",
+      data: newStudent,
+    });
+  } catch (err) {
+    res.status(400).json({
+      status: "fail",
+      message: err,
+    });
+  }
 }
 
 async function getStudents(req, res) {
@@ -54,9 +68,19 @@ async function getStudents(req, res) {
     }
 
     const filtredStudents = await Student.find(query);
-    res.json(filtredStudents);
+    res.status(200).json({
+      status: "success",
+      results: filtredStudents.length,
+      data: {
+        filtredStudents,
+      },
+    });
   } catch (error) {
     console.log(error);
+    res.status(404).json({
+      status: "fail",
+      message: err,
+    });
   }
 }
 
@@ -87,4 +111,4 @@ async function getStats(req, res) {
     console.log(error);
   }
 }
-module.exports = { addStudent, getStudents,getStats };
+module.exports = { addStudent, getStudents, getStats };

@@ -4,7 +4,11 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "backend": "nodemon server.js",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "start": "concurrently \"npm run dev\" \"npm run backend\""
   },
   "keywords": [],
   "author": "",
@@ -18,5 +22,9 @@
     "express": "^4.22.1",
     "gsap": "^3.14.2",
     "mongoose": "^5.13.23"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "vite": "^7.3.1"
   }
 }
