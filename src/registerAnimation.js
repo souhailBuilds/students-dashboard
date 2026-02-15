@@ -1,3 +1,5 @@
+import { DotLottie } from "https://cdn.jsdelivr.net/npm/@lottiefiles/dotlottie-web/+esm";
+import { canvasUI } from "./ui";
 //if the form if succesfully filled return an animation
 export default function successRegisterStudent() {
   const animation = new DotLottie({

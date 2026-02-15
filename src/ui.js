@@ -27,6 +27,7 @@ export const dashboardUI = {
   totalNumberOfStudents: document.querySelector(".total-students"),
   paidStatusCanvas: document.getElementById("status-circle-chart"),
   searchBarFilter: document.querySelector(".search-container"),
+  cardsContainer: document.querySelector(".database-students-container"),
 };
 
 export const teacherInputs = {

@@ -5,11 +5,14 @@ const {
   addStudent,
   getStudents,
   getStats,
+  editStudent,
+  getStudentById,
 } = require("./../controllers/studentController");
 
 studentRoute.post("/", addStudent);
 studentRoute.get("/", getStudents);
-
 studentRoute.get("/stats", getStats);
+studentRoute.get("/:id", getStudentById);
+studentRoute.patch("/:id", editStudent);
 
 module.exports = { studentRoute };

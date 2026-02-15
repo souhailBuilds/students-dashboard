@@ -1,6 +1,6 @@
 // get data about how many not paid and how many paid and so one for
 // draw the circle data in dashboard
- export async function getStudentStats() {
+export async function getStudentStats() {
   try {
     const data = await fetch("http://127.0.0.1:9000/students/stats", {
       method: "GET",
@@ -13,6 +13,50 @@
     return statData;
   } catch (error) {
     console.log(error);
+  }
+}
+
+export async function editStudent(id, student) {
+  try {
+    const data = await fetch(`http://127.0.0.1:9000/students/${id}`, {
+      method: "PATCH",
+      headers: {
+        "Content-type": "application/json",
+      },
+      body: JSON.stringify(student),
+    });
+
+    const res = await data.json();
+    return res;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function deleteStudent(id) {
+  try {
+    const data = await fetch(`http://127.0.0.1:9000/students/${id}`, {
+      method: "DELETE",
+    });
+
+    const res = await data.json();
+    return res;
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+export async function getStudentById(id) {
+  try {
+    const data = await fetch(`http://127.0.0.1:9000/students/${id}`, {
+      method: "GET",
+    });
+
+    const res = await data.json();
+    console.log("i did it", res);
+    return res;
+  } catch (err) {
+    console.log(err);
   }
 }
 

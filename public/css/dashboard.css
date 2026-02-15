@@ -422,6 +422,16 @@ main {
   font-size: 0.9rem;
   border-radius: 10px;
   border: 2px solid var(--very-light--);
+  transition: all 0.4s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.student-card:hover {
+  border-left: 2px solid #8c2bee;
+  background: #1c1c1c;
+  box-shadow: -4px 0 20px rgba(140, 43, 238, 0.2);
+  transform: translateX(6px);
 }
 .image-container,
 .image-name-container {

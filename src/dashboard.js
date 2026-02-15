@@ -1,6 +1,11 @@
-import { DotLottie } from "https://cdn.jsdelivr.net/npm/@lottiefiles/dotlottie-web/+esm";
 import displayCircleStatusChart from "./circleCharts";
-import { getStudentStats, getDataListByCategory, sendDataInfos } from "./api";
+import {
+  getStudentStats,
+  getDataListByCategory,
+  sendDataInfos,
+  editStudent,
+  getStudentById,
+} from "./api";
 import displayProfChartsBar from "./barCharts";
 import successRegisterStudent from "./registerAnimation";
 import { makeListOfTeacherFromDatabase, dataForChartProfs } from "./teachers";
@@ -17,6 +22,7 @@ import {
 //const canvasAnimation = document.getElementById("canvas");
 
 let totalMonthRevenu = 0;
+let currentStudentId = null;
 
 // this is tha main function if user is in dashboard page
 //load this function to display all data
@@ -45,6 +51,7 @@ export async function dashboard() {
   const data = Object.values(profsData);
   // get data from paid andn ot paid nad pending and so one
   const studentsStatData = await getStudentStats();
+  console.log("a rsaaaaa", studentsStatData);
   displayCircleStatusChart(
     studentsStatData,
     studentsArray.data.filtredStudents,
@@ -167,10 +174,10 @@ export async function dashboard() {
   });
 
   // this function for handle the the student input
-  formUI.studentForm.addEventListener("submit", (e) => {
+  formUI.studentForm.addEventListener("submit", function (e) {
     e.preventDefault();
     // check image input
-    imageChoise();
+    imageChoise(studentInputs);
     // we calculate next payment date if the student has paid
     const nextDatePayment = nextPayment();
 
@@ -185,11 +192,18 @@ export async function dashboard() {
       image: studentInputs.imageInput.value,
       hasPaid: studentInputs.hasPaid.value,
       category: localStorage.getItem("choice"),
-      nextPayment: nextDatePayment,
+      // nextPayment: nextDatePayment,
     };
 
     successRegisterStudent();
-    sendDataInfos(student, "students");
+    if (!currentStudentId) {
+      student.nextPayment = nextDatePayment;
+      sendDataInfos(student, "students");
+    } else {
+      editStudent(currentStudentId, student);
+    }
+    //reset
+    currentStudentId = null;
   });
 
   // calculate next payment date for student
@@ -214,6 +228,7 @@ export async function dashboard() {
   // this fucntion is for controll the ui forms displayor hide them
   function controlForms(button, cssClass, methode) {
     button.addEventListener("click", () => {
+      if (button.classList.contains("cancel-btn")) currentStudentId = null;
       document.querySelector(`.${cssClass}`).classList[methode]("hidden");
     });
   }
@@ -226,5 +241,28 @@ export async function dashboard() {
   // hide or display  teacher form according the user button
   controlForms(formUI.teacherFormCloseBtn, "overlay-teacher", "add");
   controlForms(formUI.teacherFormOpenBtn, "overlay-teacher", "remove");
+
+  dashboardUI.cardsContainer.addEventListener("click", async function (e) {
+    if (e.target.closest(".edit-btn")) {
+      currentStudentId = e.target.closest(".edit-btn").id;
+
+      const studobj = await getStudentById(currentStudentId);
+      const { student } = studobj.data;
+      // console.log(student.firstName);
+      studentInputs.firstName.value = student.firstName;
+      studentInputs.lastName.value = student.lastName;
+      studentInputs.gender.value = student.gender;
+      studentInputs.phoneNumber.value = student.phoneNumber;
+      studentInputs.address.value = student.address;
+      studentInputs.prof.value = student.prof;
+      studentInputs.price.value = student.price;
+      studentInputs.imageInput.value = student.image;
+      studentInputs.hasPaid.value = student.hasPaid;
+      document.querySelector(".overlay").classList.remove("hidden");
+    }
+  });
 }
+
+//
+
 // this section still need to add if user inputs one of them is empty return

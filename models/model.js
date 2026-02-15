@@ -51,30 +51,33 @@ const studentSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-const TeacherSchema = new mongoose.Schema({
-  firstName: {
-    type: String,
-    required: true,
-  },
-  lastName: {
-    type: String,
-    required: true,
-  },
+const TeacherSchema = new mongoose.Schema(
+  {
+    firstName: {
+      type: String,
+      required: true,
+    },
+    lastName: {
+      type: String,
+      required: true,
+    },
 
-  phoneNumber: {
-    type: String,
-    default: null,
-  },
+    phoneNumber: {
+      type: String,
+      default: null,
+    },
 
-  subject: {
-    type: String,
-    required: true,
+    subject: {
+      type: String,
+      required: true,
+    },
+    category: {
+      type: String,
+      required: true,
+    },
   },
-  category: {
-    type: String,
-    required: true,
-  },
-});
+  { timestamps: true },
+);
 const Student = mongoose.model("Student", studentSchema);
 const Teacher = mongoose.model("Teacher", TeacherSchema);
 module.exports = { Student, Teacher };

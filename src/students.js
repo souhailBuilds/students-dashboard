@@ -11,6 +11,8 @@ export function drawStudentTemplate(student) {
   card.querySelector(".nextPayment-value").textContent = paymentCheck(student);
   card.querySelector(".student-image").src = student.image;
   card.querySelector(".adress-value").textContent = student.address;
+  card.querySelector(".edit-btn").setAttribute("id", student._id);
+  card.querySelector(".delete-btn").setAttribute("id", student._id);
   if (student.hasPaid === "oui") {
     card
       .querySelector(".payment-statu-tag-container")
@@ -54,7 +56,7 @@ function calculateDaysLeft(student) {
   return dayLeft;
 }
 
-export function imageChoise() {
+export function imageChoise(studentInputs) {
   // if we user dont upload a photo we should put a provisor image
   if (
     studentInputs.imageInput.value === "" &&

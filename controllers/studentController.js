@@ -12,7 +12,7 @@ async function addStudent(req, res) {
   } catch (err) {
     res.status(400).json({
       status: "fail",
-      message: err,
+      message: err.message,
     });
   }
 }
@@ -76,10 +76,9 @@ async function getStudents(req, res) {
       },
     });
   } catch (error) {
-    console.log(error);
     res.status(404).json({
       status: "fail",
-      message: err,
+      message: error.message,
     });
   }
 }
@@ -108,7 +107,54 @@ async function getStats(req, res) {
     console.log("here", paymentStudentsData);
     res.json(paymentStudentsData);
   } catch (error) {
-    console.log(error);
+    res.status(404).json({
+      status: "fail",
+      message: error.message,
+    });
   }
 }
-module.exports = { addStudent, getStudents, getStats };
+
+async function editStudent(req, res) {
+  try {
+    const student = await Student.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    });
+
+    res.status(200).json({
+      status: "success",
+      data: {
+        student,
+      },
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "fail",
+      message: error.message,
+    });
+  }
+}
+
+async function getStudentById(req, res) {
+  try {
+    const student = await Student.findById(req.params.id);
+    res.status(200).json({
+      status: "success",
+      data: {
+        student,
+      },
+    });
+  } catch (error) {
+    res.status(404).json({
+      status: "fail",
+      message: error.message,
+    });
+  }
+}
+module.exports = {
+  addStudent,
+  getStudents,
+  getStats,
+  editStudent,
+  getStudentById,
+};
