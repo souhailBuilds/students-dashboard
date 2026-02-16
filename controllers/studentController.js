@@ -43,10 +43,10 @@ async function getStudents(req, res) {
     }
 
     if (paymentStatu === "paid") {
-      query.hasPaid = "oui";
+      query.hasPaid = true;
     }
     if (paymentStatu === "not paid") {
-      query.hasPaid = "no";
+      query.hasPaid = false;
     }
 
     if (!!phoneNumber) {
@@ -86,8 +86,8 @@ async function getStudents(req, res) {
 async function getStats(req, res) {
   try {
     const afterThreeDays = Date.now() + 86400000 * 3;
-    const paidStudents = await Student.find({ hasPaid: "oui" });
-    const notPaidStudent = await Student.find({ hasPaid: "no" });
+    const paidStudents = await Student.find({ hasPaid: true });
+    const notPaidStudent = await Student.find({ hasPaid: false });
     const lateStudent = await Student.find({
       nextPayment: { $lt: new Date(Date.now()) },
     });

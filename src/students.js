@@ -13,7 +13,8 @@ export function drawStudentTemplate(student) {
   card.querySelector(".adress-value").textContent = student.address;
   card.querySelector(".edit-btn").setAttribute("id", student._id);
   card.querySelector(".delete-btn").setAttribute("id", student._id);
-  if (student.hasPaid === "oui") {
+  card.querySelector(".mark-paid").setAttribute("id", student._id);
+  if (student.hasPaid === true) {
     card
       .querySelector(".payment-statu-tag-container")
       .classList.add("statu-active");
@@ -37,7 +38,7 @@ export function drawStudentTemplate(student) {
 
 // function that check if user haspaid so we display the next date payment
 function paymentCheck(student) {
-  if (student.hasPaid === "oui") {
+  if (student.hasPaid === true) {
     const nextDatePay = new Date(student.nextPayment);
     return nextDatePay.toLocaleDateString("fr-FR", {
       year: "numeric",

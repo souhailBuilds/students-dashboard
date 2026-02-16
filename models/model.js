@@ -36,8 +36,8 @@ const studentSchema = new mongoose.Schema(
       required: true,
     },
     hasPaid: {
-      type: String,
-      required: true,
+      type: Boolean,
+      default: false,
     },
     category: {
       type: String,

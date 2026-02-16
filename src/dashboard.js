@@ -49,9 +49,8 @@ export async function dashboard() {
   );
   const labels = Object.keys(profsData);
   const data = Object.values(profsData);
-  // get data from paid andn ot paid nad pending and so one
+  // get data from paid and not paid nad pending and so one
   const studentsStatData = await getStudentStats();
-  console.log("a rsaaaaa", studentsStatData);
   displayCircleStatusChart(
     studentsStatData,
     studentsArray.data.filtredStudents,
@@ -66,7 +65,8 @@ export async function dashboard() {
   studentsArray.data.filtredStudents.forEach((student) => {
     drawStudentTemplate(student);
     // here we calculate the sum for people how is assigned as paid
-    if (student.hasPaid === "oui") {
+    //student.hasPaid === "oui"
+    if (student.hasPaid === true) {
       totalMonthRevenu += student.price;
     }
   });
@@ -190,34 +190,66 @@ export async function dashboard() {
       prof: studentInputs.prof.value,
       price: Number(studentInputs.price.value),
       image: studentInputs.imageInput.value,
-      hasPaid: studentInputs.hasPaid.value,
+      // hasPaid: studentInputs.hasPaid.value,
       category: localStorage.getItem("choice"),
       // nextPayment: nextDatePayment,
     };
 
     successRegisterStudent();
+    // if we have an currentStudentId THAT MEAN WE WANT TO UPDATE
+    // A STUDENT
+    // ELSE WE WANT TO CRREATE A NEW STUDENT
     if (!currentStudentId) {
       student.nextPayment = nextDatePayment;
+      student.hasPaid = studentInputs.hasPaid.value;
       sendDataInfos(student, "students");
     } else {
       editStudent(currentStudentId, student);
     }
-    //reset
+    //reset CURRENT STUDENT ID FOR NEXT STEP IF WE need
+    // TO CREATE A NEW STUDENT later
     currentStudentId = null;
   });
 
-  // calculate next payment date for student
-
-  function nextPayment() {
+  // calculate nexPayment for markPaid button using data from database
+  function nextPaymentDateFromDatabase(student) {
     let nextPayment = "";
-    if (studentInputs.hasPaid.value === "oui") {
+    // if student has already a nexPayment date
+    if (student.nextPayment) {
+      const nextDate = new Date(student.nextPayment);
+      nextDate.setDate(nextDate.getDate() + 30);
+      // nextPayment = nextDate.toLocaleString("fr-FR", {
+      //   year: "numeric",
+      //   day: "numeric",
+      //   month: "long",
+      // });
+      nextPayment = nextDate.toISOString();
+    } else {
       const nextDate = new Date();
       nextDate.setDate(nextDate.getDate() + 30);
-      nextPayment = nextDate.toLocaleString("fr-FR", {
-        year: "numeric",
-        day: "numeric",
-        month: "long",
-      });
+      // nextPayment = nextDate.toLocaleString("fr-FR", {
+      //   year: "numeric",
+      //   day: "numeric",
+      //   month: "long",
+      // });
+      nextPayment = nextDate.toISOString();
+    }
+
+    return nextPayment;
+  }
+
+  // calculate next payment date for student registration phase
+  function nextPayment() {
+    let nextPayment = "";
+    if (studentInputs.hasPaid.value === "true") {
+      const nextDate = new Date();
+      nextDate.setDate(nextDate.getDate() + 30);
+      // nextPayment = nextDate.toLocaleString("fr-FR", {
+      //   year: "numeric",
+      //   day: "numeric",
+      //   month: "long",
+      // });
+      nextPayment = nextDate.toISOString();
     } else {
       nextPayment = null;
     }
@@ -228,7 +260,11 @@ export async function dashboard() {
   // this fucntion is for controll the ui forms displayor hide them
   function controlForms(button, cssClass, methode) {
     button.addEventListener("click", () => {
+      // awalys reste currentStudentid to null we we click cancel button
       if (button.classList.contains("cancel-btn")) currentStudentId = null;
+      // if we want to registerSTudent for the first time show payment status select
+      if (button.classList.contains("add-student-btn"))
+        document.querySelector(".payment-status").classList.remove("hidden");
       document.querySelector(`.${cssClass}`).classList[methode]("hidden");
     });
   }
@@ -244,6 +280,8 @@ export async function dashboard() {
 
   dashboardUI.cardsContainer.addEventListener("click", async function (e) {
     if (e.target.closest(".edit-btn")) {
+      // studentInputs.hasPaid.classList.add("hidden");
+      document.querySelector(".payment-status").classList.add("hidden");
       currentStudentId = e.target.closest(".edit-btn").id;
 
       const studobj = await getStudentById(currentStudentId);
@@ -259,8 +297,61 @@ export async function dashboard() {
       studentInputs.imageInput.value = student.image;
       studentInputs.hasPaid.value = student.hasPaid;
       document.querySelector(".overlay").classList.remove("hidden");
+    } else if (e.target.classList.contains("mark-paid")) {
+      // if the target is button MARK PAID
+      // we find the student that have our id and then
+      // we check if has a nextPayment date we recalculate from his last payment+30
+      // if he dont have any next payment we calculate from today+30
+      currentStudentId = e.target.id;
+      const studobj = await getStudentById(currentStudentId);
+      const { student } = studobj.data;
+      const nextDate = nextPaymentDateFromDatabase(student);
+      await editStudent(currentStudentId, {
+        nextPayment: nextDate,
+        hasPaid: true,
+      });
+
+      // this part is for DOM manipulation when we user click Mark paid
+      // i prefer manipulate dom instead of fetch all students and re display them
+      cardDOMmanipulation(e.target, nextDate);
     }
   });
+
+  function cardDOMmanipulation(e, nextDate) {
+    const studentCard = e.closest(".student-card");
+    const paymentDeadLineContainer =
+      studentCard.querySelector(".payment-deadline");
+    //
+    const today = new Date();
+    const nextDatePay = new Date(nextDate);
+    const calc = Math.round((nextDatePay - today) / (1000 * 60 * 60 * 24));
+    const percent = (calc * 100) / 30;
+    // this for a progress bar div how much left
+    const progressBarDiv =
+      paymentDeadLineContainer.querySelector(".progress-bar");
+    progressBarDiv.style.setProperty("--width", percent);
+    paymentDeadLineContainer.classList.remove("hidden");
+    //
+    // this is a payment infos parent container
+    const paymentInfosContainer =
+      paymentDeadLineContainer.querySelector(".payment-infos");
+    // this a span inside paymentDeadLineContainer that display how much left (countDown)
+    const daysCountDown = paymentInfosContainer.querySelector(".days-left");
+
+    daysCountDown.textContent = `${calc} Jours`;
+    /// this a div parent of next payment infos div
+    const nextPaymentContainer = studentCard.querySelector(
+      ".next-payment-container",
+    );
+    // this is span inside nextPaymentCOntainer that display next date of payment
+    const nextPaymentVal =
+      nextPaymentContainer.querySelector(".nextPayment-value");
+    nextPaymentVal.textContent = new Date(nextDate).toLocaleString("fr-FR", {
+      year: "numeric",
+      day: "numeric",
+      month: "long",
+    });
+  }
 }
 
 //
