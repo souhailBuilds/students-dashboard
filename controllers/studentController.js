@@ -135,6 +135,21 @@ async function editStudent(req, res) {
   }
 }
 
+async function deleteStudent(req, res) {
+  try {
+    await Student.findByIdAndDelete(req.params.id);
+    res.status(204).json({
+      status: "success",
+      data: null,
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: "fail",
+      message: error.message,
+    });
+  }
+}
+
 async function getStudentById(req, res) {
   try {
     const student = await Student.findById(req.params.id);
@@ -157,4 +172,5 @@ module.exports = {
   getStats,
   editStudent,
   getStudentById,
+  deleteStudent,
 };

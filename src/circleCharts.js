@@ -1,9 +1,13 @@
 import { dashboardUI } from "./ui";
+let myChart = null;
 export default function displayCircleStatusChart(arr, studentArr) {
+  if (myChart) {
+    myChart.destroy();
+  }
   const labels = Object.keys(arr);
   const data = Object.values(arr);
   const paidPercent = Math.floor((arr.paid * 100) / studentArr.length);
-  new Chart(dashboardUI.paidStatusCanvas, {
+  myChart = new Chart(dashboardUI.paidStatusCanvas, {
     type: "doughnut",
     data: {
       labels: labels,

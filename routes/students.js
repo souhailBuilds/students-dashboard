@@ -7,6 +7,7 @@ const {
   getStats,
   editStudent,
   getStudentById,
+  deleteStudent,
 } = require("./../controllers/studentController");
 
 studentRoute.post("/", addStudent);
@@ -14,5 +15,6 @@ studentRoute.get("/", getStudents);
 studentRoute.get("/stats", getStats);
 studentRoute.get("/:id", getStudentById);
 studentRoute.patch("/:id", editStudent);
+studentRoute.delete("/:id", deleteStudent);
 
 module.exports = { studentRoute };

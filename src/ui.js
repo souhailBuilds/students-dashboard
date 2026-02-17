@@ -1,4 +1,5 @@
 const canvasAnimation = document.getElementById("canvas");
+const canvasMarkPaidAnimation = document.getElementById("mark-paid-canvas");
 
 export const formUI = {
   studentForm: document.querySelector(".student-form"),
@@ -12,6 +13,7 @@ export const formUI = {
 export const canvasUI = {
   canvasAnimation: canvasAnimation,
   context: canvasAnimation.getContext("2d"),
+  canvasMarkPaidAnimation: canvasMarkPaidAnimation,
 };
 export const templateUI = {
   template: document.getElementById("student-templete"),

@@ -66,6 +66,7 @@ body {
   flex-direction: column;
   gap: 20px;
   padding: 20px 40px;
+  position: relative;
 }
 
 main {
@@ -324,7 +325,8 @@ main {
 /* --------- this section for add new student from -----------  */
 
 .overlay,
-.overlay-teacher {
+.overlay-teacher,
+.animation-mark-paid {
   position: fixed;
   top: 0;
   left: 0;
@@ -335,11 +337,16 @@ main {
   justify-content: center;
   backdrop-filter: blur(10px);
 }
-
+.animation-mark-paid {
+  z-index: 1000;
+}
 .holder {
   position: relative;
   height: auto;
   width: 600px;
+}
+.students-from-database {
+  position: relative;
 }
 
 #canvas {

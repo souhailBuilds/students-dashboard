@@ -5,9 +5,11 @@ import {
   sendDataInfos,
   editStudent,
   getStudentById,
+  deleteStudent,
 } from "./api";
 import displayProfChartsBar from "./barCharts";
 import successRegisterStudent from "./registerAnimation";
+import markPaidAniimation from "./markPaidAnimation";
 import { makeListOfTeacherFromDatabase, dataForChartProfs } from "./teachers";
 import { drawStudentTemplate, imageChoise } from "./students";
 import {
@@ -23,6 +25,8 @@ import {
 
 let totalMonthRevenu = 0;
 let currentStudentId = null;
+let studentsArray = [];
+//let teachersArray = [];
 
 // this is tha main function if user is in dashboard page
 //load this function to display all data
@@ -31,7 +35,7 @@ export async function dashboard() {
   // dispaly all data with the user choice
 
   const userChoice = localStorage.getItem("choice");
-  const studentsArray = await getDataListByCategory(
+  studentsArray = await getDataListByCategory(
     "students",
     "category",
     userChoice,
@@ -314,6 +318,19 @@ export async function dashboard() {
       // this part is for DOM manipulation when we user click Mark paid
       // i prefer manipulate dom instead of fetch all students and re display them
       cardDOMmanipulation(e.target, nextDate);
+      // here we acctualise the payment statu circle when mark paid
+      // was cklicked
+      const studentsStatData = await getStudentStats();
+      displayCircleStatusChart(
+        studentsStatData,
+        studentsArray.data.filtredStudents,
+      );
+
+      markPaidAniimation();
+    } else if (e.target.closest(".delete-btn")) {
+      console.log("delete");
+      currentStudentId = e.target.closest(".delete-btn").id;
+      deleteStudent(currentStudentId);
     }
   });
 
@@ -351,6 +368,22 @@ export async function dashboard() {
       day: "numeric",
       month: "long",
     });
+
+    const priceContainer = studentCard.querySelector(".price-container");
+    const priceText = priceContainer.querySelector(".price-value").textContent;
+    const price = priceText.split(" ");
+    const studentPrice = Number(price[0]);
+
+    // change teh revenu sum after mark paid button clicked
+    dashboardUI.totalRevenuValue.textContent = `${(totalMonthRevenu + studentPrice).toLocaleString()} DH`;
+
+    // chnage color of statu from orange to green color
+    const activeStatu = studentCard.querySelector(
+      ".payment-statu-tag-container",
+    );
+
+    activeStatu.classList.remove("statu-not-active");
+    activeStatu.classList.add("statu-active");
   }
 }
 
