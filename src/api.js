@@ -95,6 +95,47 @@ export async function getDataListByCategory(
   }
 }
 
+export async function searBarStudentFilter(query, filtreinput) {
+  try {
+    const filter = await fetch(
+      `http://127.0.0.1:9000/students?${query}=${filtreinput}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-type": "application/json",
+        },
+      },
+    );
+
+    const res = await filter.json();
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+export async function getStudentByFilter(
+  targetPersons,
+  category,
+  prof = null,
+  paymentStatu = null,
+) {
+  let url = `http://127.0.0.1:9000/${targetPersons}?category=${category}`;
+  if (prof) url = url + `&prof=${prof}`;
+  if (paymentStatu) url = url + `&paymentStatu=${paymentStatu}`;
+  try {
+    const filter = await fetch(url, {
+      method: "GET",
+      headers: { "Content-type": "application/json" },
+    });
+
+    const res = await filter.json();
+    return res;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
 // we send user data to our server after user has submit his form
 export async function sendDataInfos(studentObj, parametre) {
   try {

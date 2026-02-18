@@ -6,6 +6,8 @@ import {
   editStudent,
   getStudentById,
   deleteStudent,
+  getStudentByFilter,
+  searBarStudentFilter,
 } from "./api";
 import displayProfChartsBar from "./barCharts";
 import successRegisterStudent from "./registerAnimation";
@@ -26,7 +28,8 @@ import {
 let totalMonthRevenu = 0;
 let currentStudentId = null;
 let studentsArray = [];
-//let teachersArray = [];
+let teachersArray = [];
+let userChoice = null;
 
 // this is tha main function if user is in dashboard page
 //load this function to display all data
@@ -34,17 +37,12 @@ export async function dashboard() {
   // when page load read a the user choice from local storage
   // dispaly all data with the user choice
 
-  const userChoice = localStorage.getItem("choice");
-  studentsArray = await getDataListByCategory(
-    "students",
-    "category",
-    userChoice,
-  );
-  const teachersArray = await getDataListByCategory(
-    "teachers",
-    "category",
-    userChoice,
-  );
+  userChoice = localStorage.getItem("choice");
+  //before split
+
+  studentsArray = await getStudentByFilter("students", userChoice);
+  //after split
+  teachersArray = await getStudentByFilter("teachers", userChoice);
   // display number of students in this section
   dashboardUI.totalNumberOfStudents.textContent = `Total of Students : ${studentsArray.results}`;
   const profsData = dataForChartProfs(
@@ -81,19 +79,22 @@ export async function dashboard() {
   dashboardUI.profSelector.addEventListener("change", async (e) => {
     localStorage.setItem("selectedProf", e.target.value);
     const paymentStatu = localStorage.getItem("paymentStatu");
-    let selectedStundents = [];
-    const urlChunck =
-      e.target.value === "all students"
-        ? `category=${localStorage.getItem("choice")}`
-        : `prof=${e.target.value}`;
-    selectedStundents = await getDataListByCategory(
+    userChoice = localStorage.getItem("choice");
+    let userSelect = "";
+    // if user want display all students no students with a speacefic teacher
+    if (e.target.value === "all students") {
+      userSelect = null;
+    } else {
+      userSelect = e.target.value;
+    }
+
+    const selectedStundents = await getStudentByFilter(
       "students",
-      "prof",
-      e.target.value,
-      true,
+      userChoice,
+      userSelect,
       paymentStatu,
-      urlChunck,
     );
+
     //}
     // if have student by teacher we shoudl clear the div container and draw
     //students that are with this teacher
@@ -117,15 +118,8 @@ export async function dashboard() {
     } else {
       userQuery = "fullName";
     }
-    const targetSTudent = await getDataListByCategory(
-      "",
-      userQuery,
-      searchValue,
-      false,
-      "",
-      "",
-      true,
-    );
+
+    const targetSTudent = await searBarStudentFilter(userQuery, searchValue);
     document.querySelector(".database-students-container").textContent = "";
     targetSTudent.data.filtredStudents.forEach((student) => {
       drawStudentTemplate(student);
@@ -136,18 +130,22 @@ export async function dashboard() {
   // if user want to filter by statu like paid not paid late and so one
   dashboardUI.statusSelector.addEventListener("change", async (e) => {
     localStorage.setItem("paymentStatu", e.target.value);
+    let userSelect = "";
     const prof = localStorage.getItem("selectedProf");
-    const urlChunck =
-      prof === "all students"
-        ? `category=${localStorage.getItem("choice")}`
-        : `prof=${prof}`;
-    const students = await getDataListByCategory(
+    userChoice = localStorage.getItem("choice");
+    // if user choice all student so prof should be null
+    // that mean no specefic teacher all students
+    if (prof === "all students") {
+      userSelect = null;
+    } else {
+      userSelect = prof;
+    }
+
+    const students = await getStudentByFilter(
       "students",
-      "paymentStatu",
+      userChoice,
+      userSelect,
       e.target.value,
-      true,
-      e.target.value,
-      urlChunck,
     );
     document.querySelector(".database-students-container").textContent = "";
     students.data.filtredStudents.forEach((student) => {
