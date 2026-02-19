@@ -1,7 +1,6 @@
 import displayCircleStatusChart from "./circleCharts";
 import {
   getStudentStats,
-  getDataListByCategory,
   sendDataInfos,
   editStudent,
   getStudentById,
@@ -33,18 +32,8 @@ let userChoice = null;
 
 // this is tha main function if user is in dashboard page
 //load this function to display all data
-export async function dashboard() {
-  // when page load read a the user choice from local storage
-  // dispaly all data with the user choice
 
-  userChoice = localStorage.getItem("choice");
-  //before split
-
-  studentsArray = await getStudentByFilter("students", userChoice);
-  //after split
-  teachersArray = await getStudentByFilter("teachers", userChoice);
-  // display number of students in this section
-  dashboardUI.totalNumberOfStudents.textContent = `Total of Students : ${studentsArray.results}`;
+async function displayCharts(studentsArray, teachersArray) {
   const profsData = dataForChartProfs(
     studentsArray.data.filtredStudents,
     teachersArray,
@@ -58,6 +47,21 @@ export async function dashboard() {
     studentsArray.data.filtredStudents,
   );
   displayProfChartsBar(data, labels);
+}
+export async function dashboard() {
+  // when page load read a the user choice from local storage
+  // dispaly all data with the user choice
+
+  userChoice = localStorage.getItem("choice");
+  //before split
+
+  studentsArray = await getStudentByFilter("students", userChoice);
+  //after split
+  teachersArray = await getStudentByFilter("teachers", userChoice);
+  // display number of students in this section
+  dashboardUI.totalNumberOfStudents.textContent = `Total of Students : ${studentsArray.results}`;
+  ////// display prof charts and payment status charts
+  displayCharts(studentsArray, teachersArray);
   console.log(teachersArray);
   console.log("hello", studentsArray.data.filtredStudents);
   // display teacher list in the ui select element
@@ -80,18 +84,11 @@ export async function dashboard() {
     localStorage.setItem("selectedProf", e.target.value);
     const paymentStatu = localStorage.getItem("paymentStatu");
     userChoice = localStorage.getItem("choice");
-    let userSelect = "";
-    // if user want display all students no students with a speacefic teacher
-    if (e.target.value === "all students") {
-      userSelect = null;
-    } else {
-      userSelect = e.target.value;
-    }
 
     const selectedStundents = await getStudentByFilter(
       "students",
       userChoice,
-      userSelect,
+      e.target.value,
       paymentStatu,
     );
 
@@ -105,6 +102,36 @@ export async function dashboard() {
       });
     }
   });
+
+  // this function is about return an array of all students according
+  // the user chocie when we make an update (student) or delete student
+  // for redraw all students with new fresh data
+  async function refreshStudentsCardsContainer() {
+    const selectedProf = localStorage.getItem("selectedProf");
+    const selectedPaymentStatu = localStorage.getItem("paymentStatu");
+    userChoice = localStorage.getItem("choice");
+    const students = await getStudentByFilter(
+      "students",
+      userChoice,
+      selectedProf,
+      selectedPaymentStatu,
+    );
+
+    document.querySelector(".database-students-container").textContent = "";
+    totalMonthRevenu = 0;
+    students.data.filtredStudents.forEach((student) => {
+      drawStudentTemplate(student);
+      if (student.hasPaid === true) {
+        totalMonthRevenu += student.price;
+      }
+    });
+    displayDataInDashboard();
+    studentsArray = await getStudentByFilter("students", userChoice);
+    //after split
+    teachersArray = await getStudentByFilter("teachers", userChoice);
+    displayCharts(studentsArray, teachersArray);
+    //return students;
+  }
 
   // if user want to search using the search bar
   // we can search by phone number or full name or first or last name
@@ -130,21 +157,13 @@ export async function dashboard() {
   // if user want to filter by statu like paid not paid late and so one
   dashboardUI.statusSelector.addEventListener("change", async (e) => {
     localStorage.setItem("paymentStatu", e.target.value);
-    let userSelect = "";
     const prof = localStorage.getItem("selectedProf");
     userChoice = localStorage.getItem("choice");
-    // if user choice all student so prof should be null
-    // that mean no specefic teacher all students
-    if (prof === "all students") {
-      userSelect = null;
-    } else {
-      userSelect = prof;
-    }
 
     const students = await getStudentByFilter(
       "students",
       userChoice,
-      userSelect,
+      prof,
       e.target.value,
     );
     document.querySelector(".database-students-container").textContent = "";
@@ -176,7 +195,7 @@ export async function dashboard() {
   });
 
   // this function for handle the the student input
-  formUI.studentForm.addEventListener("submit", function (e) {
+  formUI.studentForm.addEventListener("submit", async function (e) {
     e.preventDefault();
     // check image input
     imageChoise(studentInputs);
@@ -208,6 +227,8 @@ export async function dashboard() {
     } else {
       editStudent(currentStudentId, student);
     }
+
+    refreshStudentsCardsContainer();
     //reset CURRENT STUDENT ID FOR NEXT STEP IF WE need
     // TO CREATE A NEW STUDENT later
     currentStudentId = null;
@@ -299,6 +320,7 @@ export async function dashboard() {
       studentInputs.imageInput.value = student.image;
       studentInputs.hasPaid.value = student.hasPaid;
       document.querySelector(".overlay").classList.remove("hidden");
+      refreshStudentsCardsContainer();
     } else if (e.target.classList.contains("mark-paid")) {
       // if the target is button MARK PAID
       // we find the student that have our id and then
@@ -328,7 +350,8 @@ export async function dashboard() {
     } else if (e.target.closest(".delete-btn")) {
       console.log("delete");
       currentStudentId = e.target.closest(".delete-btn").id;
-      deleteStudent(currentStudentId);
+      await deleteStudent(currentStudentId);
+      refreshStudentsCardsContainer();
     }
   });
 

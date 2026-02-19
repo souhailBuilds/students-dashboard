@@ -1,8 +1,11 @@
 import { dashboardUI } from "./ui";
+let chart = null;
 export default function displayProfChartsBar(data, label) {
+  if (chart) {
+    chart.destroy();
+  }
   const formattedLabels = label.map((name) => name.split(" "));
-  console.log("ffffffffffffff");
-  new Chart(dashboardUI.profCharsBarCanvas, {
+  chart = new Chart(dashboardUI.profCharsBarCanvas, {
     type: "bar",
     data: {
       labels: formattedLabels,

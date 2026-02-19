@@ -62,38 +62,38 @@ export async function getStudentById(id) {
 
 // this function is for calling data from the database acccording the
 // user choice
-export async function getDataListByCategory(
-  targetPersons,
-  query,
-  choice,
-  combineFilters = false,
-  paymentStat,
-  urlChunck,
-  searchBarFilter = false,
-) {
-  let url = "";
-  if (searchBarFilter) {
-    url = `http://127.0.0.1:9000/students?${query}=${choice}`;
-  } else if (combineFilters) {
-    url = `http://127.0.0.1:9000/students?${urlChunck}&paymentStatu=${paymentStat}`;
-  } else {
-    url = `http://127.0.0.1:9000/${targetPersons}?${query}=${choice}`;
-  }
+// export async function getDataListByCategory(
+//   targetPersons,
+//   query,
+//   choice,
+//   combineFilters = false,
+//   paymentStat,
+//   urlChunck,
+//   searchBarFilter = false,
+// ) {
+//   let url = "";
+//   if (searchBarFilter) {
+//     url = `http://127.0.0.1:9000/students?${query}=${choice}`;
+//   } else if (combineFilters) {
+//     url = `http://127.0.0.1:9000/students?${urlChunck}&paymentStatu=${paymentStat}`;
+//   } else {
+//     url = `http://127.0.0.1:9000/${targetPersons}?${query}=${choice}`;
+//   }
 
-  try {
-    const data = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Content-type": "application/json",
-      },
-    });
+//   try {
+//     const data = await fetch(url, {
+//       method: "GET",
+//       headers: {
+//         "Content-type": "application/json",
+//       },
+//     });
 
-    const listData = await data.json();
-    return listData;
-  } catch (error) {
-    console.log(error);
-  }
-}
+//     const listData = await data.json();
+//     return listData;
+//   } catch (error) {
+//     console.log(error);
+//   }
+// }
 
 export async function searBarStudentFilter(query, filtreinput) {
   try {
@@ -121,8 +121,9 @@ export async function getStudentByFilter(
   paymentStatu = null,
 ) {
   let url = `http://127.0.0.1:9000/${targetPersons}?category=${category}`;
-  if (prof) url = url + `&prof=${prof}`;
-  if (paymentStatu) url = url + `&paymentStatu=${paymentStatu}`;
+  if (prof && prof !== "all students") url = url + `&prof=${prof}`;
+  if (paymentStatu && paymentStatu !== "all students")
+    url = url + `&paymentStatu=${paymentStatu}`;
   try {
     const filter = await fetch(url, {
       method: "GET",
