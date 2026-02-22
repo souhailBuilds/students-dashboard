@@ -30,6 +30,11 @@ export const dashboardUI = {
   paidStatusCanvas: document.getElementById("status-circle-chart"),
   searchBarFilter: document.querySelector(".search-container"),
   cardsContainer: document.querySelector(".database-students-container"),
+  overLayPaidsMonths: document.querySelector(
+    ".paids-months-selector-container",
+  ),
+  paidMonthsForm: document.querySelector(".paids-month-form"),
+  closePaidMonthsForm: document.querySelector(".paids-months-closeBtn"),
 };
 
 export const teacherInputs = {

@@ -326,7 +326,8 @@ main {
 
 .overlay,
 .overlay-teacher,
-.animation-mark-paid {
+.animation-mark-paid,
+.paids-months-selector-container {
   position: fixed;
   top: 0;
   left: 0;
@@ -337,7 +338,8 @@ main {
   justify-content: center;
   backdrop-filter: blur(10px);
 }
-.animation-mark-paid {
+.animation-mark-paid,
+.paids-months-selector-container {
   z-index: 1000;
 }
 .holder {

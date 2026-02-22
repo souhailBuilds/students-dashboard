@@ -47,6 +47,12 @@ const studentSchema = new mongoose.Schema(
       type: Date,
       default: null,
     },
+    payments: [
+      {
+        date: { type: Date },
+        amount: { type: Number },
+      },
+    ],
   },
   { timestamps: true },
 );

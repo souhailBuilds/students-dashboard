@@ -29,6 +29,10 @@ let currentStudentId = null;
 let studentsArray = [];
 let teachersArray = [];
 let userChoice = null;
+let numberOfMonthsPaid = null;
+let markPaidButton = null;
+const currentMonth = new Date().getMonth();
+const currentYear = new Date().getFullYear();
 
 // this is tha main function if user is in dashboard page
 //load this function to display all data
@@ -68,14 +72,41 @@ export async function dashboard() {
   makeListOfTeacherFromDatabase(teachersArray, dashboardUI.profSelector);
   makeListOfTeacherFromDatabase(teachersArray, studentInputs.prof);
 
+  // this for draw students template in page
   studentsArray.data.filtredStudents.forEach((student) => {
     drawStudentTemplate(student);
     // here we calculate the sum for people how is assigned as paid
-    //student.hasPaid === "oui"
-    if (student.hasPaid === true) {
-      totalMonthRevenu += student.price;
-    }
+    // old
+    // if (student.hasPaid === true) {
+    //   totalMonthRevenu += student.price;
+    // }
+    // if (student.lastPaymentDate) {
+    //   const paymentDate = new Date(student.lastPaymentDate);
+    //   if (
+    //     currentMonth === paymentDate.getMonth() &&
+    //     currentYear === paymentDate.getFullYear()
+    //   ) {
+    //     totalMonthRevenu += student.price;
+    //   }
+    // }
   });
+  // this for calculate total revenu this month
+  // totalMonthRevenu = 0;
+  // studentsArray.data.filtredStudents.forEach((student) => {
+  //   if (student.payments.length > 0) {
+  //     for (let i = 0; i < student.payments.length; i++) {
+  //       const paymentDate = new Date(student.payments[i].date);
+  //       if (
+  //         currentMonth === paymentDate.getMonth() &&
+  //         currentYear === paymentDate.getFullYear()
+  //       ) {
+  //         totalMonthRevenu += student.payments[i].amount;
+  //       }
+  //     }
+  //   }
+  // });
+
+  monthRevenu(studentsArray.data.filtredStudents);
 
   displayDataInDashboard();
 
@@ -121,10 +152,10 @@ export async function dashboard() {
     totalMonthRevenu = 0;
     students.data.filtredStudents.forEach((student) => {
       drawStudentTemplate(student);
-      if (student.hasPaid === true) {
-        totalMonthRevenu += student.price;
-      }
+      // OLD
     });
+
+    monthRevenu(students.data.filtredStudents);
     displayDataInDashboard();
     studentsArray = await getStudentByFilter("students", userChoice);
     //after split
@@ -181,7 +212,7 @@ export async function dashboard() {
   }
 
   // this function is for handle teacher input
-  formUI.teacherForm.addEventListener("submit", (e) => {
+  formUI.teacherForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const teacher = {
       firstName: teacherInputs.firstName.value,
@@ -191,7 +222,7 @@ export async function dashboard() {
       category: localStorage.getItem("choice"),
     };
 
-    sendDataInfos(teacher, "teachers");
+    await sendDataInfos(teacher, "teachers");
   });
 
   // this function for handle the the student input
@@ -223,24 +254,39 @@ export async function dashboard() {
     if (!currentStudentId) {
       student.nextPayment = nextDatePayment;
       student.hasPaid = studentInputs.hasPaid.value;
-      sendDataInfos(student, "students");
+      if (studentInputs.hasPaid.value === "true") {
+        //TODO:
+        const lastPaymentDate = new Date().toISOString();
+        // i build a new object payment
+        const newPayment = {
+          date: lastPaymentDate,
+          amount: Number(student.price),
+        };
+        // i add to payment to existing payments array
+        const updatedPayments = [...(student.payments || []), newPayment];
+        student.payments = updatedPayments;
+      }
+
+      await sendDataInfos(student, "students");
+      console.log("new");
     } else {
-      editStudent(currentStudentId, student);
+      //student.lastPaymentDate = new Date().toISOString();
+      await editStudent(currentStudentId, student);
     }
 
-    refreshStudentsCardsContainer();
+    await refreshStudentsCardsContainer();
     //reset CURRENT STUDENT ID FOR NEXT STEP IF WE need
     // TO CREATE A NEW STUDENT later
     currentStudentId = null;
   });
 
   // calculate nexPayment for markPaid button using data from database
-  function nextPaymentDateFromDatabase(student) {
+  function nextPaymentDateFromDatabase(student, numberOfMonths = 1) {
     let nextPayment = "";
     // if student has already a nexPayment date
     if (student.nextPayment) {
       const nextDate = new Date(student.nextPayment);
-      nextDate.setDate(nextDate.getDate() + 30);
+      nextDate.setDate(nextDate.getDate() + 30 * numberOfMonths);
       // nextPayment = nextDate.toLocaleString("fr-FR", {
       //   year: "numeric",
       //   day: "numeric",
@@ -249,7 +295,7 @@ export async function dashboard() {
       nextPayment = nextDate.toISOString();
     } else {
       const nextDate = new Date();
-      nextDate.setDate(nextDate.getDate() + 30);
+      nextDate.setDate(nextDate.getDate() + 30 * numberOfMonths);
       // nextPayment = nextDate.toLocaleString("fr-FR", {
       //   year: "numeric",
       //   day: "numeric",
@@ -257,6 +303,18 @@ export async function dashboard() {
       // });
       nextPayment = nextDate.toISOString();
     }
+
+    // if (student.payments.length > 0) {
+    //   const nextDate = new Date(
+    //     student.payments[student.payments.length - 1].date,
+    //   );
+    //   nextDate.setDate(nextDate.getDate() + 30 * numberOfMonths);
+    //   nextPayment = nextDate.toISOString();
+    // } else {
+    //   const nextDate = new Date();
+    //   nextDate.setDate(nextDate.getDate() + 30);
+    //   nextPayment = nextDate.toISOString();
+    // }
 
     return nextPayment;
   }
@@ -320,19 +378,44 @@ export async function dashboard() {
       studentInputs.imageInput.value = student.image;
       studentInputs.hasPaid.value = student.hasPaid;
       document.querySelector(".overlay").classList.remove("hidden");
-      refreshStudentsCardsContainer();
+      await refreshStudentsCardsContainer();
     } else if (e.target.classList.contains("mark-paid")) {
+      dashboardUI.overLayPaidsMonths.classList.remove("hidden");
+
       // if the target is button MARK PAID
       // we find the student that have our id and then
       // we check if has a nextPayment date we recalculate from his last payment+30
       // if he dont have any next payment we calculate from today+30
       currentStudentId = e.target.id;
+      markPaidButton = e.target;
+      return;
       const studobj = await getStudentById(currentStudentId);
       const { student } = studobj.data;
       const nextDate = nextPaymentDateFromDatabase(student);
+      let lastPaymentDate = null;
+      // if this tudent has no mark paid history date
+      // else we take the
+      if (student.payments.length === 0) {
+        lastPaymentDate = new Date().toISOString();
+      } else {
+        const lastPayment = new Date(
+          student.payments[student.payments.length - 1].date,
+        );
+        const studentNextDate = new Date(lastPayment);
+        studentNextDate.setDate(lastPayment.getDate() + 30);
+        lastPaymentDate = studentNextDate.toISOString();
+      }
+      // i build a new object payment
+      const newPayment = {
+        date: lastPaymentDate,
+        amount: Number(student.price),
+      };
+      // i add to payment to existing payments array
+      const updatedPayments = [...student.payments, newPayment];
       await editStudent(currentStudentId, {
         nextPayment: nextDate,
         hasPaid: true,
+        payments: updatedPayments,
       });
 
       // this part is for DOM manipulation when we user click Mark paid
@@ -346,13 +429,17 @@ export async function dashboard() {
         studentsArray.data.filtredStudents,
       );
 
+      totalMonthRevenu += student.price;
+      displayDataInDashboard();
       markPaidAniimation();
     } else if (e.target.closest(".delete-btn")) {
       console.log("delete");
       currentStudentId = e.target.closest(".delete-btn").id;
       await deleteStudent(currentStudentId);
-      refreshStudentsCardsContainer();
+      await refreshStudentsCardsContainer();
     }
+
+    //refreshStudentsCardsContainer();
   });
 
   function cardDOMmanipulation(e, nextDate) {
@@ -395,9 +482,6 @@ export async function dashboard() {
     const price = priceText.split(" ");
     const studentPrice = Number(price[0]);
 
-    // change teh revenu sum after mark paid button clicked
-    dashboardUI.totalRevenuValue.textContent = `${(totalMonthRevenu + studentPrice).toLocaleString()} DH`;
-
     // chnage color of statu from orange to green color
     const activeStatu = studentCard.querySelector(
       ".payment-statu-tag-container",
@@ -406,6 +490,106 @@ export async function dashboard() {
     activeStatu.classList.remove("statu-not-active");
     activeStatu.classList.add("statu-active");
   }
+
+  dashboardUI.closePaidMonthsForm.addEventListener("click", () => {
+    dashboardUI.overLayPaidsMonths.classList.add("hidden");
+  });
+
+  // function calculate total revenu every month
+  function monthRevenu(data) {
+    totalMonthRevenu = 0;
+    data.forEach((student) => {
+      if (student.payments.length > 0) {
+        for (let i = 0; i < student.payments.length; i++) {
+          const paymentDate = new Date(student.payments[i].date);
+          if (
+            currentMonth === paymentDate.getMonth() &&
+            currentYear === paymentDate.getFullYear()
+          ) {
+            totalMonthRevenu += student.payments[i].amount;
+          }
+        }
+      }
+    });
+  }
+  //////////////////////////////////////////
+  dashboardUI.paidMonthsForm.addEventListener("submit", async function (e) {
+    e.preventDefault();
+
+    numberOfMonthsPaid = document.getElementById("students-paid-month").value;
+    if (isNaN(Number(numberOfMonthsPaid))) return;
+    console.log(numberOfMonthsPaid);
+    dashboardUI.overLayPaidsMonths.classList.add("hidden");
+
+    ////////////
+    const studobj = await getStudentById(currentStudentId);
+    const { student } = studobj.data;
+    console.log("xxxx", student);
+    const nextDate = nextPaymentDateFromDatabase(
+      student,
+      Number(numberOfMonthsPaid),
+    );
+    let lastPaymentDate = null;
+    // if this tudent has no mark paid history date
+    // else we take the
+    let allPayments = student.payments;
+    console.log(nextDate);
+    for (let i = 0; i < Number(numberOfMonthsPaid); i++) {
+      if (allPayments.length === 0) {
+        lastPaymentDate = new Date().toISOString();
+      } else {
+        const lastPayment = new Date(allPayments[allPayments.length - 1].date);
+        const studentNextDate = new Date(lastPayment);
+        studentNextDate.setDate(lastPayment.getDate() + 30);
+        lastPaymentDate = studentNextDate.toISOString();
+      }
+
+      // i build a new object payment
+      const newPayment = {
+        date: lastPaymentDate,
+        amount: Number(student.price),
+      };
+      // i add to payment to existing payments array
+      allPayments = [...allPayments, newPayment];
+    }
+    console.log(allPayments);
+    await editStudent(currentStudentId, {
+      nextPayment: nextDate,
+      hasPaid: true,
+      payments: allPayments,
+    });
+
+    // this part is for DOM manipulation when we user click Mark paid
+    // i prefer manipulate dom instead of fetch all students and re display them
+    cardDOMmanipulation(markPaidButton, nextDate);
+    studentsArray = await getStudentByFilter("students", userChoice);
+    // here we acctualise the payment statu circle when mark paid
+    // was cklicked
+    const studentsStatData = await getStudentStats();
+    displayCircleStatusChart(
+      studentsStatData,
+      studentsArray.data.filtredStudents,
+    );
+    // totalMonthRevenu = 0;
+    // studentsArray.data.filtredStudents.forEach((student) => {
+    //   if (student.payments.length > 0) {
+    //     for (let i = 0; i < student.payments.length; i++) {
+    //       const paymentDate = new Date(student.payments[i].date);
+    //       if (
+    //         currentMonth === paymentDate.getMonth() &&
+    //         currentYear === paymentDate.getFullYear()
+    //       ) {
+    //         totalMonthRevenu += student.payments[i].amount;
+    //       }
+    //     }
+    //   }
+    // });
+
+    monthRevenu(studentsArray.data.filtredStudents);
+    numberOfMonthsPaid = null;
+    displayDataInDashboard();
+    markPaidAniimation();
+  });
 }
 
 //
